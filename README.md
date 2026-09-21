@@ -37,7 +37,7 @@ private content. Roll back image plus a coordinated pre-upgrade data snapshot.
 
 ## Build and qualification
 
-`docker build -t ghcr.io/neobuilds/statamic:6.33.0-xcloud.1 .`
+`docker build -t ghcr.io/neobuilds/statamic:6.33.0-xcloud.2 .`
 
 This candidate is under qualification; publication does not imply managed OneClick
 certification. See https://github.com/xCloudDev/app-templates/issues/805.

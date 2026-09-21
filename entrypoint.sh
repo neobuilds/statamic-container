@@ -17,4 +17,5 @@ mkdir -p /data/storage/framework/cache/data /data/storage/framework/sessions /da
 chown www-data:www-data /data /data/public /data/storage/framework/cache/data /data/storage/framework/sessions /data/storage/framework/views /data/storage/app/public
 gosu www-data php /opt/statamic-bootstrap-admin.php
 gosu www-data php artisan optimize:clear --no-interaction >/dev/null
+gosu www-data php please stache:warm --no-interaction >/dev/null
 exec docker-php-entrypoint "$@"

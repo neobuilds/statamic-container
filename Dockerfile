@@ -18,6 +18,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --prefer-dist --no-inte
       mv "$path" "/opt/statamic-seed/$path"; ln -s "/data/$path" "$path"; \
     done \
  && ln -s /data/storage/app/public public/storage \
+ && chown root:root /var/www/html && chmod 755 /var/www/html \
  && chown -R www-data:www-data bootstrap/cache
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 COPY production.ini /usr/local/etc/php/conf.d/zz-production.ini
@@ -26,7 +27,7 @@ COPY bootstrap-admin.php /opt/statamic-bootstrap-admin.php
 RUN chmod 755 /usr/local/bin/statamic-entrypoint
 ENV APP_ENV=production APP_DEBUG=false LOG_CHANNEL=stderr SESSION_DRIVER=file CACHE_STORE=file QUEUE_CONNECTION=sync STATAMIC_PRO_ENABLED=false
 LABEL org.opencontainers.image.source="https://github.com/neobuilds/statamic-container" \
- org.opencontainers.image.version="6.33.0-xcloud.1" \
+ org.opencontainers.image.version="6.33.0-xcloud.2" \
  org.opencontainers.image.description="Unmodified Statamic CMS with Core defaults; xCloud deployment packaging"
 EXPOSE 80
 HEALTHCHECK --interval=15s --timeout=5s --start-period=45s CMD curl -fsS http://127.0.0.1/up >/dev/null || exit 1
