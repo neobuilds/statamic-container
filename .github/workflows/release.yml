@@ -40,7 +40,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.GHCR_PUSH_TOKEN || github.token }}
       - name: Build natively and push by digest only
         id: build
         uses: docker/build-push-action@v6
@@ -82,7 +82,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.GHCR_PUSH_TOKEN || github.token }}
       - name: Publish only after both native runtime suites pass
         env:
           VERSION: ${{ inputs.version }}
