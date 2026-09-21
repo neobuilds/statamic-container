@@ -26,8 +26,9 @@ COPY entrypoint.sh /usr/local/bin/statamic-entrypoint
 COPY bootstrap-admin.php /opt/statamic-bootstrap-admin.php
 RUN chmod 755 /usr/local/bin/statamic-entrypoint
 ENV APP_ENV=production APP_DEBUG=false LOG_CHANNEL=stderr SESSION_DRIVER=file CACHE_STORE=file QUEUE_CONNECTION=sync STATAMIC_PRO_ENABLED=false
+ARG PACKAGING_VERSION=6.33.0-xcloud.3
 LABEL org.opencontainers.image.source="https://github.com/neobuilds/statamic-container" \
- org.opencontainers.image.version="6.33.0-xcloud.2" \
+ org.opencontainers.image.version="${PACKAGING_VERSION}" \
  org.opencontainers.image.description="Unmodified Statamic CMS with Core defaults; xCloud deployment packaging"
 EXPOSE 80
 HEALTHCHECK --interval=15s --timeout=5s --start-period=45s CMD curl -fsS http://127.0.0.1/up >/dev/null || exit 1
