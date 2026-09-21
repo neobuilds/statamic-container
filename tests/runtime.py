@@ -33,9 +33,11 @@ def gate(key):
     print(key + ': passed', flush=True)
 
 def ready():
+    global backend_port
     for _ in range(120):
         state = json.loads(docker('inspect', name))[0]['State']
         if state.get('Health', {}).get('Status') == 'healthy':
+            backend_port = int(docker('port', name, '80/tcp').rsplit(':', 1)[1])
             return
         if not state['Running']:
             raise AssertionError('Container stopped')
@@ -97,7 +99,11 @@ with tempfile.TemporaryDirectory(prefix=name) as tmp:
         headers['X-XSRF-TOKEN'] = urllib.parse.unquote(s.cookies.get('XSRF-TOKEN'))
         return s, headers
     # Small valid PNG, deterministic media readback.
-    payload = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aL1sAAAAASUVORK5CYII=')
+    import struct
+    import zlib
+    def png_chunk(kind, data):
+        return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
+    payload = b'\x89PNG\r\n\x1a\n' + png_chunk(b'IHDR', struct.pack('>IIBBBBB', 64, 64, 8, 2, 0, 0, 0)) + png_chunk(b'IDAT', zlib.compress((b'\x00' + bytes([60, 130, 190]) * 64) * 64)) + png_chunk(b'IEND', b'')
     def readback():
         s, headers = login()
         r = s.get(base+'/cp/collections/pages/entries/'+entry_id, headers={'Accept':'application/json'}, timeout=120)
