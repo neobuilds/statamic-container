@@ -37,7 +37,21 @@ private content. Roll back image plus a coordinated pre-upgrade data snapshot.
 
 ## Build and qualification
 
-`docker build -t ghcr.io/neobuilds/statamic:6.33.0-xcloud.2 .`
+`docker build -t ghcr.io/neobuilds/statamic:6.33.0-xcloud.3 .`
 
-This candidate is under qualification; publication does not imply managed OneClick
-certification. See https://github.com/xCloudDev/app-templates/issues/805.
+Release CI builds on native `ubuntu-24.04` (amd64) and `ubuntu-24.04-arm`
+(arm64), without QEMU. Each digest must pass anonymous pull, fresh startup,
+HTTPS administrator login with secure cookies, control-panel content/media
+creation and readback, restart, forced recreation, and stopped-volume backup
+restored into an empty replacement volume. Every persistence phase reauthenticates.
+Disposable containers, volumes, TLS keys and credentials are removed. Sanitized
+JSON gate results and image configs are retained as Actions artifacts.
+
+Only after both native suites pass does the publisher assemble the multiarch
+index. Dispatch `release.yml` with a **new** packaging version; both preflight
+and publication reject an already-existing tag. Tags through `6.33.0-xcloud.2`
+remain amd64-only and are never overwritten. Registry verification anonymously
+hashes every platform's config and layer blobs.
+
+Native CI qualification is separate from managed OneClick certification, tracked
+in https://github.com/xCloudDev/app-templates/pull/806.
